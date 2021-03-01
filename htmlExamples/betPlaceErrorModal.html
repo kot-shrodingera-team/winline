@@ -1,0 +1,37 @@
+<div class="popup-container modal-open">
+  <div uib-modal-window="modal-window" class="modal ng-scope ng-isolate-scope in" role="dialog" index="0"
+    animate="animate" ng-style="{'z-index': 1050 + $$topModalIndex*10, display: 'block'}" tabindex="-1"
+    uib-modal-animation-class="fade" modal-in-class="in" style="z-index: 1050; display: block;">
+    <div class="modal-dialog ">
+      <div class="modal-content" uib-modal-transclude="">
+        <div class="g-popup-overlay ng-scope" data-ng-click="close(true)"></div>
+        <div class="g-popup g-popup_active ng-scope" id="popup-clear-coupon">
+          <div class="block"></div>
+          <div class="g-popup-header ng-scope" data-translate="coupon.MESSAGES.14.TITLE" data-translate-values=""
+            data-translate-default="">Купон не принят</div>
+          <div data-ng-click="close(false)" class="btn-delete"></div>
+          <div class="g-popup-content error ng-scope" data-translate="" data-translate-values=""
+            data-translate-default="">
+            <p data-translate="" data-translate-default="" class="ng-scope"></p>
+          </div>
+
+          <div class="g-popup-content ng-scope" data-ng-class="{'g-popup-content_cancel': showCancelIcon}"
+            data-translate="coupon.MESSAGES.14.TEXT" data-translate-values="" data-ng-click="closeInfo();"
+            data-translate-default="">Коэффициент на одно или несколько событий изменился. Принять изменения?</div>
+
+          <div class="btns-clear-coupon-selections">
+            <div data-ng-show="buttonCancel" data-ng-click="cancelButton()" class="g-form-btn submit-fast-rate grey fl"
+              data-ng-class="{fl: buttonOk}"><span data-translate="coupon.BACK" data-translate-default=""
+                class="ng-scope">Назад</span></div>
+            <div data-ng-show="buttonOk" data-ng-click="okButton()" class="g-form-btn btn-success submit-fast-rate fr"
+              data-ng-class="{fr: buttonCancel}"><span data-translate="coupon.BTN_ACCEPT" data-translate-default=""
+                class="ng-scope">Принять</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div uib-modal-backdrop="modal-backdrop" class="modal-backdrop ng-scope in"
+    ng-style="{'z-index': 1040 + (index &amp;&amp; 1 || 0) + index*10}" uib-modal-animation-class="fade"
+    modal-in-class="in" data-bootstrap-modal-aria-hidden-count="1" aria-hidden="true" style="z-index: 1040;"></div>
+</div>  

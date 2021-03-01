@@ -1,0 +1,301 @@
+<div data-coupon="">
+  <!-- ngIf: isReady -->
+  <div class="coupon ng-scope coupon_cupis" data-ng-class="{'coupon_smat': isSmat, 'coupon_cupis': isCupis}"
+    data-ng-if="isReady">
+    <!--Ординар-->
+    <div class="coupon-tabs">
+      <a class="coupon-tabs__link ng-scope coupon-tabs__link_active"
+        data-ng-class="{'coupon-tabs__link_active': coupon.page === 'main'}" data-ng-click="setPage('main')" href=""
+        data-translate="coupon.COUPON" data-translate-default="">Купон</a>
+      <!-- ngIf: client.user --><a class="coupon-tabs__link ng-scope"
+        data-ng-class="{'coupon-tabs__link_active': coupon.page === 'history'}" data-ng-if="client.user"
+        data-ng-click="setPage('history')"><span data-translate="coupon.BET_CUPIS" data-translate-default=""
+          class="ng-scope">Мои пари</span><!-- ngIf: coupon.history.length --></a><!-- end ngIf: client.user -->
+      <!-- ngIf: client.user && lastCoupon --><a class="coupon-tabs__refresh ng-scope"
+        data-ng-if="client.user &amp;&amp; lastCoupon" data-ng-click="returnCoupon('lastCoupon')"
+        title="Вернуть последний купон">
+
+      </a><!-- end ngIf: client.user && lastCoupon -->
+    </div>
+
+    <!-- ngIf: isSmat && (!client.user && !bets.length || coupon.showCheck) -->
+
+    <!-- ngIf: coupon.page === 'main' -->
+    <div data-ng-if="coupon.page === 'main'" class="ng-scope">
+
+      <!-- ngIf: bets.length -->
+      <div class="coupon-navigation ng-scope" data-ng-if="bets.length">
+        <a class="coupon-navigation__item ng-scope coupon-navigation__item_active" data-ng-click="setTab(0)"
+          data-ng-class="{'coupon-navigation__item_active': coupon.flag === 0}" data-translate="coupon.ORDINAR"
+          data-translate-default="">Ординар</a>
+        <a class="coupon-navigation__item ng-scope" data-ng-click="setTab(1)"
+          data-ng-class="{'coupon-navigation__item_active': coupon.flag === 1}" data-translate="coupon.EXPRESS"
+          data-translate-default="">Экспресс</a>
+        <a class="coupon-navigation__item ng-scope" data-ng-click="setTab(2)"
+          data-ng-class="{'coupon-navigation__item_active': coupon.flag === 2}" data-translate="coupon.SYSTEM"
+          data-translate-default="">Система</a>
+      </div><!-- end ngIf: bets.length -->
+
+      <!-- Bets start -->
+      <!-- ngRepeat: bet in bets track by bet.idLine -->
+      <div data-coupon-bet="bet" data-index="$index" data-id-zakaz="idZakaz" data-print="print"
+        data-ng-repeat="bet in bets track by bet.idLine" class="ng-scope ng-isolate-scope">
+        <div class="coupon-sheet"
+          data-ng-class="{'no-market': bet.state === 1 || bet.state === 3, 'locked-bet': bet.state === 2}">
+
+          <!-- ngIf: isSmat && !coupon.loginstate && (coupon.flag === 0 || index === 0) -->
+
+          <div class="coupon-player">
+            <div class="coupon-player__name">
+              <!-- ngIf: isSmat && bet.isOD === 1 -->
+              <a class="coupon-player__event ng-binding" title="Алекперов Эльдар - Обухов Виталий"
+                data-ng-bind="bet.firstStrName" data-ng-href="/plus/7803544/" href="/plus/7803544/">Алекперов Эльдар -
+                Обухов Виталий</a>
+            </div>
+
+            <button class="cross" data-translate-attr="{title: 'coupon.EVENT_REMOVE'}"
+              data-ng-click="expressClose(index, false, true);" title="Удалить событие из купона"></button>
+
+            <!-- ngIf: isSmat && !coupon.loginstate && !bet.isSpecial && (!bet.isLive || !bet.eventScore || !bet.eventTime) -->
+            <!-- ngIf: isSmat && !coupon.loginstate && !bet.isSpecial && bet.isLive && bet.eventScore && bet.eventTime -->
+
+            <a data-ng-href="/plus/7803544/" class="coupon-player__type ng-binding" title="5 сет фора +2.5"
+              data-ng-bind="bet.Free" href="/plus/7803544/">5 сет фора +2.5</a>
+          </div>
+
+          <div class="coupon-rate">
+            <div class="coupon-rate__who">
+              <a data-ng-bind="bet.R" title="Обухов Виталий 2.5" data-ng-href="/plus/7803544/" class="ng-binding"
+                href="/plus/7803544/">Обухов Виталий</a>
+              <!-- ngIf: bet.freebet.length < 0 && coupon.flag === 0 -->
+            </div>
+            <div class="coupon-rate__how">
+              <!-- ngIf: (bet.V | koeff) >= 1.5 && coupon.flag === 1 && bonuses.bonuskoef > 1 -->
+              <i data-ng-class="{'bet-up': bet.din === 1, 'bet-down':bet.din === 2}" title="-0.17" class="bet-down"></i>
+              <span data-ng-bind="bet.V | koeff" class="ng-binding">1.19</span>
+            </div>
+          </div>
+          <!-- ngIf: [1,2].indexOf(coupon.flag) > -1 -->
+
+          <!-- ngIf: isSmat && !coupon.loginstate && coupon.flag === 0 -->
+
+          <!-- ngIf: coupon.flag === 0 && !isSmat -->
+          <div class="coupon-bet ng-scope" data-ng-if="coupon.flag === 0 &amp;&amp; !isSmat">
+
+            <div class="coupon-bet__column">
+              <label class="coupon-bet__header ng-scope" data-translate="coupon.TOTAL"
+                data-translate-default="">Сумма:</label>
+              <div class="coupon-bet__select">
+                <div class="coupon-bet__select-outer">
+                  <select size="1" data-ng-disabled="coupon.sendstate" data-ng-model="bet.defaultselect"
+                    data-ng-options="suma as suma|translate for suma in coupon.defaultsuma[coupon.currency - 1]"
+                    data-ng-change="betTotalChange(bet)" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+                    <option value="?" selected="selected"></option>
+                    <option label="0" value="string:0">0</option>
+                    <option label="300" value="string:300">300</option>
+                    <option label="500" value="string:500">500</option>
+                    <option label="1 000" value="string:1 000">1 000</option>
+                    <option label="3 000" value="string:3 000">3 000</option>
+                    <option label="5 000" value="string:5 000">5 000</option>
+                    <option label="10 000" value="string:10 000">10 000</option>
+                    <option label="50 000" value="string:50 000">50 000</option>
+                    <option label="100 000" value="string:100 000">100 000</option>
+                    <option label="Макс.пари" value="string:coupon.MAXBET_CUPIS">Макс.пари</option>
+                  </select>
+                  <span class="coupon-bet__select-button"></span>
+                </div>
+              </div>
+              <div class="coupon-bet__input">
+                <input type="tel" id="input-7803544"
+                  data-ng-class="{'error-coeff': (bet.ordinarstate > 0 &amp;&amp; bet.ordinarstate !== 5 &amp;&amp; bet.suma !== '' &amp;&amp; bet.suma !== '0'), 'multiple': toFloat(bet.suma) > 999999}"
+                  data-translate-attr="{title:titles[bet.ordinarstate]}" data-ng-disabled="coupon.sendstate"
+                  data-ng-model="bet.suma" data-ng-keydown="onKeyDown($event, bet, index)" data-ng-change="onChange()"
+                  data-ng-blur="onBlur(bet)" data-press-key-total="" data-bet="bet" data-changed="onChange()"
+                  data-number-divider=""
+                  class="ng-valid ng-isolate-scope ng-not-empty ng-dirty ng-valid-parse ng-touched">
+              </div>
+              <!-- ngIf: coupon.loginstate && coupon.flag === 0 && !isSmat && !isCupis || coupon.loginstate && coupon.flag === 0 && isCupis && client.user && [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1 -->
+              <div class="coupon-bet coupon-bet_max ng-scope"
+                data-ng-if="coupon.loginstate &amp;&amp; coupon.flag === 0 &amp;&amp; !isSmat &amp;&amp; !isCupis || coupon.loginstate &amp;&amp; coupon.flag === 0 &amp;&amp; isCupis &amp;&amp; client.user &amp;&amp; [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1">
+                <div class="coupon-bet__wrap" data-ng-class="{'coupon-bet__wrap_nosumm': !bet.isMaxShown}">
+                  <span class="coupon-bet__header ng-scope" data-translate="coupon.MAX"
+                    data-translate-default="">Макс.:</span>
+                  <!-- ngIf: !bet.isMaxShown -->
+                  <!-- ngIf: bet.isMaxShown --><span class="coupon-bet__summ ng-binding ng-scope"
+                    data-ng-if="bet.isMaxShown" data-ng-bind="zeroInsert(bet.maxSum, null, bet)">263</span>
+                  <!-- end ngIf: bet.isMaxShown -->
+                </div>
+              </div>
+              <!-- end ngIf: coupon.loginstate && coupon.flag === 0 && !isSmat && !isCupis || coupon.loginstate && coupon.flag === 0 && isCupis && client.user && [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1 -->
+            </div>
+            <div class="coupon-bet__column">
+              <!-- ngIf: !isSmat --><span class="coupon-bet__header ng-scope" data-ng-if="!isSmat"
+                data-translate="coupon.PAY" data-translate-default="">Выплата:</span><!-- end ngIf: !isSmat -->
+              <div class="coupon-bet__summ ng-binding">
+                <!-- ngIf: isSmat --> 59
+              </div>
+              <div class="coupon-bet__button"
+                data-ng-show="!isCupis || (isCupis &amp;&amp; !coupon.loginstate) || (isCupis &amp;&amp; coupon.loginstate &amp;&amp; [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1)">
+                <button class="coupon-bet__button-screw ng-scope" data-ng-disabled="coupon.sendstate"
+                  data-ng-class="{'no-active': coupon.sendstate || !coupon.canSend || bet.suma === '' || bet.suma === '0'}"
+                  data-ng-click="sendBet(0, index);" data-translate="coupon.TOBET_CUPIS"
+                  data-translate-default="">Принять</button>
+              </div>
+              <div class="coupon-bet__button ng-hide"
+                data-ng-show="isCupis &amp;&amp; coupon.loginstate &amp;&amp; [5,16,17,18,19].indexOf(client.user.info.cupisRegState) === -1">
+                <button class="coupon-bet__button-screw no-active ng-scope"
+                  data-translate-attr="{title: 'coupon.NEED_AUTH'}" data-translate="coupon.TOBET_CUPIS"
+                  data-translate-default="" title="Необходимо пройти идентификацию">Принять</button>
+              </div>
+            </div>
+          </div><!-- end ngIf: coupon.flag === 0 && !isSmat -->
+          <!-- ngIf: coupon.flag === 0 && isSmat && coupon.loginstate -->
+        </div>
+
+        <!-- ngIf: bet.freebet.length && coupon.flag === 0 && !bet.showFreebet -->
+      </div><!-- end ngRepeat: bet in bets track by bet.idLine -->
+      <!-- Bets end -->
+
+      <!-- Ordinar start-->
+      <!-- ngIf: coupon.flag === 0 && bets.length && (!isSmat || isSmat && coupon.loginstate) -->
+      <div data-coupon-ordinar=""
+        data-ng-if="coupon.flag === 0 &amp;&amp; bets.length &amp;&amp; (!isSmat || isSmat &amp;&amp; coupon.loginstate)"
+        class="ng-scope ng-isolate-scope">
+        <div class="coupon-sheet coupon-total">
+          <div class="coupon-total__resume">
+            <div class="coupon-total__line" data-ng-class="{'no-active': coupon.sendstate  || !coupon.canSend}">
+              <span class="coupon-total__header"><span data-translate="coupon.BETS_TOTAL_CUPIS"
+                  data-translate-default="" class="ng-scope">Сумма пари</span> (<span data-ng-bind="bets.length"
+                  class="ng-binding">1</span>):</span>
+              <span class="coupon-total__count ng-binding" data-ng-bind="zeroInsert(coupon.sumaordinar, 0)">50</span>
+            </div>
+            <div class="coupon-total__line" data-ng-class="{'no-active': coupon.sendstate  || !coupon.canSend}">
+              <span class="coupon-total__header ng-scope" data-translate="coupon.MAXWIN" data-translate-default="">Макс.
+                выигрыш:</span>
+              <span class="coupon-total__count ng-binding"
+                data-ng-bind="zeroInsert(coupon.viplata[0][coupon.loginstate], 0)">59</span>
+            </div>
+          </div>
+
+          <!-- ngIf: isSmat -->
+
+          <!-- ngIf: isSmat && balance -->
+
+          <div
+            data-ng-show="isCupis &amp;&amp; client.user &amp;&amp; client.user.info.country === 'Россия' &amp;&amp; ([1,24,32,35,71,10,11,12,14,44].indexOf(client.user.info.cupisRegState) !== -1
+      || ([18, 19].indexOf(client.user.info.cupisRegState) > -1 &amp;&amp; !client.user.info.surname.length &amp;&amp; !client.user.info.name.length))"
+            class="coupon-total__notice ng-binding ng-hide" data-ng-bind-html="couponNeedAuthMessageId1">Необходимо <a
+              href="/auth/personal/" class="coupon-total__notice-link">завершить идентификацию</a></div>
+
+          <div
+            data-ng-show="isCupis &amp;&amp; client.user &amp;&amp; client.user.info.country === 'Россия' &amp;&amp; [13,20,21,22,3,53].indexOf(client.user.info.cupisRegState) !== -1"
+            class="coupon-total__notice ng-binding ng-hide" data-ng-bind-html="couponNeedAuthMessageId2"><a
+              href="/auth/personal/" class="coupon-total__notice-link">В ближайшее время придет sms-уведомление, и
+              станут доступны все возможности сайта.</a></div>
+
+          <div
+            data-ng-show="isCupis &amp;&amp; client.user &amp;&amp; client.user.info.country === 'Россия' &amp;&amp; [15].indexOf(client.user.info.cupisRegState) !== -1"
+            class="coupon-total__notice ng-binding ng-hide" data-ng-bind-html="couponNeedAuthMessageId3"><a
+              href="/auth/personal/" class="coupon-total__notice-link">Необходимо повторно заполнить СНИЛС</a></div>
+
+          <div
+            data-ng-show="isCupis &amp;&amp; client.user &amp;&amp; client.user.info &amp;&amp; client.user.info.country !== 'Россия'"
+            class="coupon-total__notice ng-scope ng-hide" data-translate="coupon.NEED_AUTH_MESSAGE4"
+            data-translate-default="">Игра на сайте winline.ru доступна только для резидентов РФ</div>
+
+
+          <!-- ngIf: (isSmat || coupon.showSendBetBtn) && (!isCupis || isCupis && !coupon.loginstate || isCupis && coupon.loginstate && client.user && client.user.info.country === 'Россия' && [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1 && client.user.info.surname.length && client.user.info.name.length) -->
+          <div
+            data-ng-if="(isSmat || coupon.showSendBetBtn) &amp;&amp; (!isCupis || isCupis &amp;&amp; !coupon.loginstate || isCupis &amp;&amp; coupon.loginstate &amp;&amp; client.user &amp;&amp; client.user.info.country === 'Россия' &amp;&amp; [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1 &amp;&amp; client.user.info.surname.length &amp;&amp; client.user.info.name.length)"
+            class="button coupon__button ng-scope"
+            data-ng-class="{'button_disable': coupon.sendstate || !coupon.canSend }">
+            <a class="button__block" data-ng-click="sendBet(1);">
+              <span class="button__block-segment button__block-segment--color"></span>
+              <translate data-translate="coupon.PLACE_BET_CUPIS" data-translate-default="" class="ng-scope">Сделать пари
+              </translate>
+            </a>
+          </div>
+          <!-- end ngIf: (isSmat || coupon.showSendBetBtn) && (!isCupis || isCupis && !coupon.loginstate || isCupis && coupon.loginstate && client.user && client.user.info.country === 'Россия' && [5,16,17,18,19].indexOf(client.user.info.cupisRegState) !== -1 && client.user.info.surname.length && client.user.info.name.length) -->
+
+          <!-- ngIf: !isSmat -->
+          <div data-ng-if="!isSmat" class="ng-scope">
+            <!-- ngIf: coupon.showCounterWithNumbers -->
+            <!-- ngIf: coupon.showCounterWithoutNumbers -->
+          </div><!-- end ngIf: !isSmat -->
+
+        </div>
+      </div><!-- end ngIf: coupon.flag === 0 && bets.length && (!isSmat || isSmat && coupon.loginstate) -->
+      <!-- Ordinar end-->
+
+      <!-- Express start -->
+      <!-- ngIf: coupon.flag === 1 && bets.length -->
+      <!-- Express end -->
+
+      <!-- System start -->
+      <!-- ngIf: coupon.flag === 2 && bets.length -->
+      <!-- System end -->
+
+      <!-- ngIf: !bets.length -->
+
+      <!-- ngIf: bets.length -->
+      <div class="coupon-sheet coupon-total ng-scope" data-ng-if="bets.length">
+        <a class="coupon-total__clear ng-scope" data-ng-click="betDelete();" href="" data-translate="coupon.CLEAN"
+          data-translate-default="">Очистить купон</a>
+      </div><!-- end ngIf: bets.length -->
+
+      <!-- Hotbets start -->
+      <!-- ngIf: !isSmat || isSmat && coupon.loginstate -->
+      <div data-coupon-hotbets="" data-ng-if="!isSmat || isSmat &amp;&amp; coupon.loginstate"
+        class="ng-scope ng-isolate-scope">
+        <!-- ngIf: showDetector -->
+        <div class="coupon-sheet coupon-info ng-scope" data-ng-if="showDetector">
+          <!-- ngIf: bets.length -->
+          <div class="coupon-info__hotbet ng-scope" data-ng-if="bets.length">
+            <input class="coupon-info__input ng-pristine ng-untouched ng-valid ng-not-empty" id="clear" type="checkbox"
+              name="clear" data-ng-model="coupon.clearAfterBet">
+            <label for="clear" data-translate="coupon.CLEAN_AFTER_BET_CUPIS" data-translate-default=""
+              class="ng-scope">Очистить купон после пари</label>
+          </div><!-- end ngIf: bets.length -->
+
+          <div class="coupon-info__hotbet coupon-info__hotbet--short">
+            <input class="coupon-info__input ng-pristine ng-untouched ng-valid ng-empty" id="all-coefficient"
+              type="checkbox" name="all-coefficient" data-ng-disabled="coupon.sendstate" value="checkbox"
+              data-ng-model="coupon.anyKoef" data-ng-change="onAnyKoefChange()">
+
+            <label for="all-coefficient" data-translate="coupon.TAKE_ANY_CUPIS" data-translate-default=""
+              class="ng-scope">Прием и выкуп с любым кф.</label>
+            <input class="coupon-info__input ng-pristine ng-untouched ng-valid ng-empty" id="hotbet" type="checkbox"
+              name="hotbet" data-ng-disabled="coupon.sendstate" data-ng-model="coupon.rapidstate"
+              data-ng-change="onRapidstateChange()">
+
+            <label for="hotbet" data-translate="coupon.FASTBET_CUPIS" data-translate-default="" class="ng-scope">Быстрое
+              пари</label>
+            <div class="coupon-info__select">
+              <div class="coupon-info__select-outer">
+                <select disabled="" size="1" name="region"></select>
+                <span class="coupon-info__select-button"></span>
+              </div>
+            </div>
+
+            <div class="coupon-bet__input">
+              <input disabled="" data-ng-model="coupon.rapidsuma"
+                data-ng-class="{ 'multiple': coupon.rapidsuma > 999999 }"
+                class="ng-pristine ng-untouched ng-valid ng-not-empty">
+            </div>
+          </div>
+        </div><!-- end ngIf: showDetector -->
+      </div><!-- end ngIf: !isSmat || isSmat && coupon.loginstate -->
+      <!-- Hotbets end -->
+
+    </div><!-- end ngIf: coupon.page === 'main' -->
+
+    <!-- System start -->
+    <div data-coupon-history="" data-bonuses="bonuses" class="ng-isolate-scope">
+      <!-- ngIf: coupon.page === 'history' -->
+    </div>
+    <!-- System end -->
+
+  </div><!-- end ngIf: isReady -->
+
+  <!-- ngIf: isSmat -->
+</div>
