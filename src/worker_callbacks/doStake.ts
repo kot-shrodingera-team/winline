@@ -6,23 +6,25 @@ import { clearDoStakeTime } from '../stake_info/doStakeTime';
 //   return true;
 // };
 
-// const postCheck = (): boolean => {
-//   return true;
-// };
+const postCheck = (): boolean => {
+  window.germesData.betProcessingStep = 'beforeStart';
+  return true;
+};
 
 const doStake = doStakeGenerator({
   // preCheck,
   doStakeButtonSelector: '[data-ng-click="sendBet(0, index);"]',
-  getCoefficient,
-  // disabledCheck: true,
   errorClasses: [
     {
       className: 'no-active',
       message: 'кнопка не активна',
     },
   ],
-  // postCheck,
+  // disabledCheck: false,
+  getCoefficient,
+  postCheck,
   clearDoStakeTime,
+  context: () => document,
 });
 
 export default doStake;

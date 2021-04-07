@@ -5,6 +5,7 @@ import {
   getPhoneLoginData,
   log,
 } from '@kot-shrodingera-team/germes-utils';
+import { authElementSelector } from '../stake_info/checkAuth';
 import { updateBalance, balanceReady } from '../stake_info/getBalance';
 // import afterSuccesfulLogin from './afterSuccesfulLogin';
 
@@ -17,7 +18,7 @@ const setLoginType = async (): Promise<boolean> => {
   await awaiter(() => {
     return anyTab.textContent !== '';
   });
-  const tabs = [...document.querySelectorAll('.logout__tabs li')];
+  const tabs = [...document.querySelectorAll<HTMLElement>('.logout__tabs li')];
   const phoneData = getPhoneLoginData();
   if (phoneData) {
     if (!phoneData.country) {
@@ -27,7 +28,7 @@ const setLoginType = async (): Promise<boolean> => {
     log('Авторизация по телефону', 'steelblue');
     const phoneTab = tabs.find((tab) => {
       return tab.textContent.trim() === 'Телефон';
-    }) as HTMLElement;
+    });
     if (!phoneTab.classList.contains('active')) {
       phoneTab.click();
       const tabActive = await awaiter(() => {
@@ -54,9 +55,9 @@ const setLoginType = async (): Promise<boolean> => {
       }
       return true;
     }
-    const currentCodeElement = document.querySelector(
+    const currentCodeElement = document.querySelector<HTMLElement>(
       '.logout__code'
-    ) as HTMLElement;
+    );
     if (!currentCodeElement) {
       log('Не найден текущий код страны');
       return false;
@@ -69,10 +70,10 @@ const setLoginType = async (): Promise<boolean> => {
         return false;
       }
       const targetCountry = [
-        ...document.querySelectorAll('.logout__country li > span'),
+        ...document.querySelectorAll<HTMLElement>('.logout__country li > span'),
       ].find((countryElement) => {
         return countryElement.textContent.trim() === phoneData.country;
-      }) as HTMLElement;
+      });
       if (!targetCountry) {
         log(`Не найдена нужная страна ${phoneData.country}`, 'crimson');
         return false;
@@ -85,7 +86,7 @@ const setLoginType = async (): Promise<boolean> => {
     log('Авторизация по E-mail', 'steelblue');
     const emailTab = tabs.find((tab) => {
       return tab.textContent.trim() === 'E-mail';
-    }) as HTMLElement;
+    });
     if (!emailTab.classList.contains('active')) {
       emailTab.click();
       const tabActive = await awaiter(() => {
@@ -110,7 +111,7 @@ const setLoginType = async (): Promise<boolean> => {
   log('Авторизация по логину', 'steelblue');
   const loginTab = tabs.find((tab) => {
     return tab.textContent.trim() === 'Логин';
-  }) as HTMLElement;
+  });
   if (!loginTab.classList.contains('active')) {
     loginTab.click();
     const tabActive = await awaiter(() => {
@@ -150,11 +151,11 @@ const authorize = authorizeGenerator({
   // beforeSubmitDelay: 0,
   // captchaSelector: '',
   loginedWait: {
-    loginedSelector: '.login_in',
+    loginedSelector: authElementSelector,
     balanceReady,
     updateBalance,
+    // afterSuccesfulLogin,
   },
-  // afterSuccesfulLogin,
 });
 
 export default authorize;

@@ -1,4 +1,4 @@
-const setBetAcceptMode = (): boolean => {
+const setBetAcceptMode = async (): Promise<boolean> => {
   return true;
 };
 

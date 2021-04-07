@@ -1,5 +1,5 @@
 import { awaiter } from '@kot-shrodingera-team/germes-utils';
-import JsFailError from './errors/jsFailError';
+import { JsFailError } from '@kot-shrodingera-team/germes-utils/errors';
 
 const checkMax = async (): Promise<void> => {
   if (apiWlb.client.bets.length === 0) {

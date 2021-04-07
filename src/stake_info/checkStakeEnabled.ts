@@ -23,6 +23,7 @@ const checkStakeEnabled = checkStakeEnabledGenerator({
   //     message: '',
   //   },
   // ],
+  context: () => document,
 });
 
 export default checkStakeEnabled;

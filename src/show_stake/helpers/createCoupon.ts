@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { log } from '@kot-shrodingera-team/germes-utils';
+import { JsFailError } from '@kot-shrodingera-team/germes-utils/errors';
 import coefficientHelper from './coefficientHelper';
-import JsFailError from './errors/jsFailError';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 const createCoupon = (line: any, oddNumber: any): unknown => {
