@@ -34,10 +34,6 @@ const getParameter = (): number => {
   if (parameterMatch) {
     return Number(parameterMatch[1]);
   }
-  // Draw No Bet = H(0)
-  // if (betName === 'Результат без ничьи') {
-  //   return 0;
-  // }
   return -6666;
 };
 
