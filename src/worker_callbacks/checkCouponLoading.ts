@@ -63,14 +63,17 @@ const modalSelector = '.modal';
 const modalTitleSelector = '.g-popup-header';
 const modalTextSelector = '.g-popup-content:not(.error)';
 const modalCloseSelector = '.btn-delete';
+const historyTabActiveSelector =
+  '.coupon-tabs__link.coupon-tabs__link_active[data-ng-click="setPage(\'history\')"]';
 
 const asyncCheck = async () => {
   window.germesData.betProcessingStep = 'waitingForLoaderOrResult';
 
-  await Promise.any([
+  await Promise.race([
     getElement(loaderSelector, getRemainingTimeout()),
     getElement(cdkModalSelector, getRemainingTimeout()),
     getElement(modalSelector, getRemainingTimeout()),
+    getElement(historyTabActiveSelector, getRemainingTimeout()),
   ]);
 
   const loaderElement = document.querySelector(loaderSelector);
@@ -92,14 +95,16 @@ const asyncCheck = async () => {
     });
 
     window.germesData.betProcessingStep = 'waitingForResult';
-    await Promise.any([
+    await Promise.race([
       getElement(cdkModalSelector, getRemainingTimeout()),
       getElement(modalSelector, getRemainingTimeout()),
+      getElement(historyTabActiveSelector, getRemainingTimeout()),
     ]);
   }
 
   const cdkModalElement = document.querySelector(cdkModalSelector);
   const modalElement = document.querySelector(modalSelector);
+  const historyTabActive = document.querySelector(historyTabActiveSelector);
 
   if (cdkModalElement) {
     let placed = false;
@@ -157,6 +162,14 @@ const asyncCheck = async () => {
       modalCloseButton.click();
     }
     return error();
+  }
+
+  if (historyTabActive) {
+    log(
+      'Переключились на вкладку истории ставок. Считаем ставку принятой',
+      'steelblue'
+    );
+    return success();
   }
 
   return error('Не дождались результата ставки');
