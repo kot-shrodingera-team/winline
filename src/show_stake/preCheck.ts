@@ -49,6 +49,15 @@ const preCheck = async (): Promise<void> => {
   if (!couponCleared) {
     throw new JsFailError('Не удалось очистить купон');
   }
+
+  const freebetModal = document.querySelector(
+    '.cdk-overlay-container .bonus-freebet'
+  );
+  if (freebetModal) {
+    const modalContainer = document.querySelector('.cdk-overlay-container');
+    log('Удаляем окно о фрибете', 'orange');
+    modalContainer.remove();
+  }
 };
 
 export default preCheck;
