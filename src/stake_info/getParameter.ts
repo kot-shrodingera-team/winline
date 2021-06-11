@@ -29,7 +29,7 @@ const getParameter = (): number => {
   const marketName = marketNameElement.textContent.trim();
   // const betName = betNameElement.textContent.trim();
 
-  const parameterRegex = /\s([+-]?\d+(?:\.\d+)?)$/;
+  const parameterRegex = /(?:Тотал|Фора)\s([+-]?\d+(?:\.\d+)?)/i;
   const parameterMatch = marketName.match(parameterRegex);
   if (parameterMatch) {
     return Number(parameterMatch[1]);
