@@ -8,8 +8,7 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
   // if (line.isLive === 0) {
   //   throw new JsFailError('Не лайв ставка');
   // }
-  const { idEvent } = line;
-  const { tipLine } = line;
+  const { idEvent, tipLine } = line;
   const event = apiWlb.getEvents().byId(idEvent);
   if (event === undefined) {
     throw new JsFailError('Событие не найдено!');
@@ -52,7 +51,7 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
     dif: 0,
     din: 0,
     freebetstate: 0,
-    freebet: [] as unknown,
+    freebet: [] as unknown[],
     freeselect: 0,
     freebetsuma: 0,
     Dif: '',
@@ -68,13 +67,14 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
     MAX_SUM: 999999999,
     MAX_PAY: 999999999,
     maxSumServer: 999999999,
+    maxSumServerDefault: 999999999,
     maxPayServer: 999999999,
     maxViplata: 999999999,
     maxPay: 0,
     maxSum: 0,
     maxSumReal: 0,
-    isMaxShown: true, // false?
-    showMax: true, // false?
+    isMaxShown: true,
+    showMax: true,
     defaultselect: 0,
     clearAfterBet: !0,
     firstStrName: null as string,
@@ -120,7 +120,7 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
         [bet.R] = event.members;
         break;
       case '2':
-        [bet.R] = event.members;
+        [, bet.R] = event.members;
         break;
       case 'X':
       case 'x':
@@ -132,22 +132,22 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
     bet.V = bet.V_;
     if (
       bet.Free.indexOf('[a]') +
-        bet.Free.indexOf('[openMarket]') +
+        bet.Free.indexOf('[b]') +
         bet.Free.indexOf('[c]') >
       -3
     ) {
       if (bet.Free.indexOf('[a]') > -1 && bet.koef.split('/')[0]) {
         bet.Free = bet.Free.replace('[a]', bet.koef.split('/')[0]);
       }
-      if (bet.Free.indexOf('[openMarket]') > -1 && bet.koef.split('/')[1]) {
+      if (bet.Free.indexOf('[b]') > -1 && bet.koef.split('/')[1]) {
         if (line.favorite) {
           const h = bet.koef.split('/')[1].replace('-', '');
           bet.Free = bet.Free.replace(
-            '[openMarket]',
+            '[b]',
             coefficientHelper.odds(h, line.favorite === oddNumber ? '-' : '+')
           );
         } else {
-          bet.Free = bet.Free.replace('[openMarket]', bet.koef.split('/')[1]);
+          bet.Free = bet.Free.replace('[b]', bet.koef.split('/')[1]);
         }
       }
       if (bet.Free.indexOf('[c]') > -1 && bet.koef.split('/')[2]) {
@@ -180,7 +180,7 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
     if (line.isPlayerLine) {
       bet.R = `${line.playerName} (${event.members[line.playerTeam - 1]})`;
       if (
-        line.tipLine.freeTextR.indexOf('[openMarket]') === -1 &&
+        line.tipLine.freeTextR.indexOf('[b]') === -1 &&
         line.extraKoef.length
       ) {
         bet.R = `${line.tipLine.R[oddNumber - 1]}, ${bet.R}`;
@@ -188,10 +188,11 @@ const createCoupon = (line: any, oddNumber: any): unknown => {
       }
     }
   }
-  bet.RTitle =
-    koef && koef.indexOf('1@') === -1 && koef.indexOf('2@') === -1
-      ? `${bet.R} ${koef === bet.R ? '' : koef}`
-      : bet.R;
+  if (koef && koef.indexOf('1@') === -1 && koef.indexOf('2@') === -1) {
+    bet.RTitle = `${bet.R} ${koef === bet.R ? '' : koef}`;
+  } else {
+    bet.RTitle = bet.R;
+  }
   if (apiWlb.client.user /* && n.isSmat */) {
     apiWlb.getService('BetService').calculateMaxSite([bet], 0, 0);
   }
